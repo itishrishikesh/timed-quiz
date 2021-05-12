@@ -19,7 +19,7 @@ function App() {
     optionD: "",
     correctOption: ""
   })
-  const [seconds, setSeconds] = useState(0)
+  const [seconds, setSeconds] = useState(20)
   const interval = useRef(null)
   const getQuestionURL = "https://opentdb.com/api.php?amount=1&category=18&difficulty=easy&type=multiple&encode=base64";
 
@@ -57,7 +57,7 @@ function App() {
   function timer(){
     if(questionNumber <= 10){
       if(questionNumber >= 0){
-        if(seconds > 20){
+        if(seconds < 0){
 
           for(var i=0;i<document.getElementsByName("answer").length;i++)
             document.getElementsByName("answer")[i].checked = false;
@@ -72,7 +72,7 @@ function App() {
             setScore(0)
             setQuestionNumber(11)
           }
-          setSeconds(0)
+          setSeconds(20)
         }
       }
     }
@@ -98,7 +98,7 @@ function App() {
         ele[i].checked = false;
 
       getNewQuestion()
-      setSeconds(0)
+      setSeconds(20)
     }
     else{
       alert("You scored " + score + " points!")
@@ -115,7 +115,7 @@ function App() {
   useEffect(timer, [seconds])
 
   const startCounter = () => interval.current = setInterval(() => {
-    setSeconds(prevState => prevState + 1)
+    setSeconds(prevState => prevState - 1)
   }, 1000)
 
   const stopCounter = () => clearInterval(interval.current)
@@ -126,7 +126,7 @@ function App() {
         <button className="center" onClick={handleOnStart}>Start Quiz!</button>
       </div>
 
-      <div id = "question_container" className = { visibility ? "visible" : "invisible" }>
+      <div className = { (visibility ? "visible " : "invisible") + " question_container" } >
         <div> <strong>Question Number: </strong>{questionNumber} </div>
         <hr />
         <div>Your score is {score}</div>
@@ -141,12 +141,12 @@ function App() {
           sendSelectedAnswer = {getSelectedAnswer}
           Loading = {loading}
         />
-        <div id = {loading ? "loading" : ""}></div>
+        <div className = {loading ? "loading" : ""}></div>
         <div className={loading ? "invisible" : "visible"}>
-          <button id="submit_button" onClick = {handleSubmit}>Submit</button>          
+          <button className="submit_button" onClick = {handleSubmit}>Submit</button>          
         </div>
         <hr />
-        <div>Time left for answering this question: <span id = "timer">{seconds}</span></div>
+        <div>Time left for answering this question: <span className = "timer">{seconds}</span></div>
       </div>
     </div>
   );
